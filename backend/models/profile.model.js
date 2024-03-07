@@ -11,6 +11,9 @@ const profileSchema = new Schema({
     type: String,
     trim: true,
   },
+  contactNumber: {
+    type: Number,
+  },
 });
 
 export const Profile = mongoose.model("Profile", profileSchema);

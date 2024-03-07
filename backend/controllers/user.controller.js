@@ -5,6 +5,7 @@ import generateUniqueOtp from "../helpers/otpGenerator.js";
 import { OTP } from "../models/otp.model.js";
 import { Profile } from "../models/profile.model.js";
 import mailSender from "../utils/mailSender.js";
+import { imageUrl } from "../constants.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -56,7 +57,6 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     confirmPassword,
     accountType,
-    contactNumber,
     otp,
   } = req.body;
   if (
@@ -64,7 +64,6 @@ const registerUser = asyncHandler(async (req, res) => {
       firstName,
       lastName,
       email,
-      contactNumber,
       password,
       confirmPassword,
       accountType,
@@ -100,6 +99,7 @@ const registerUser = asyncHandler(async (req, res) => {
     gender: null,
     dateOfBirth: null,
     about: null,
+    contactNumber: null,
   });
   const newUser = await User.create({
     firstName,
@@ -108,7 +108,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     accountType,
     additionDetails: profileDetails._id,
-    image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+    image: `${imageUrl} ${firstName} ${lastName}`,
   });
   if (!newUser) {
     return res
