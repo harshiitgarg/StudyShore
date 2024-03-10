@@ -73,4 +73,6 @@ const showAllCourses = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Courses fetched successfully", courses));
 });
 
+
+
 export { createCourse, showAllCourses };

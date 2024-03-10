@@ -1,7 +1,7 @@
-import { Section } from "../models/section.model";
-import { SubSection } from "../models/subSection.model";
-import { asyncHandler } from "../utils/asyncHandler";
-import { uploadOnCloudinary } from "../utils/cloudinary";
+import { Section } from "../models/section.model.js";
+import { SubSection } from "../models/subSection.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createSubSection = asyncHandler(async (req, res) => {
   const { sectionId, title, description } = req.body;
