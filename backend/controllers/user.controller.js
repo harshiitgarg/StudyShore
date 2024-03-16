@@ -203,3 +203,4 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 export { sendOtp, registerUser, loginUser, changePassword };
+

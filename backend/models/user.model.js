@@ -1,6 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config({
+  path: "./.env",
+});
 
 const userSchema = new Schema(
   {
@@ -49,18 +53,18 @@ const userSchema = new Schema(
       required: true,
     },
     additionDetails: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Profile",
     },
     courses: [
       {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Course",
       },
     ],
     courseProgress: [
       {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "CourseProgress",
       },
     ],
@@ -83,7 +87,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.isPasswordCorrect = async (password) => {
+userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 

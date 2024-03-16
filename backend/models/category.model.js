@@ -11,7 +11,7 @@ const categorySchema = new Schema(
     },
     courses: [
       {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Course",
       },
     ],

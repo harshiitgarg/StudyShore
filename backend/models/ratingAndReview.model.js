@@ -12,12 +12,12 @@ const ratingAndReviewSchema = new Schema(
       required: true,
     },
     user: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     course: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: "Course",
       index: true,
