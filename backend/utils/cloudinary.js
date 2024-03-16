@@ -7,17 +7,20 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadOnCloudinary = async (file, folder, height, quality) => {
-  const options = { folder };
-  if (height) {
-    options.height = height;
+const uploadOnCloudinary = async (localFilePath) => {
+  try {
+    if (!localFilePath) {
+      return null;
+    }
+    const response = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: "auto",
+    });
+    fs.unlinkSync(localFilePath);
+    return response;
+  } catch (error) {
+    fs.unlinkSync(localFilePath);
+    return null;
   }
-  if (quality) {
-    options.quality = quality;
-  }
-  options.resource_type = "auto";
-
-  return await cloudinary.uploader.upload(file.tempFilePath, options);
 };
 
 export { uploadOnCloudinary };

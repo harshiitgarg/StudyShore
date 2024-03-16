@@ -14,6 +14,16 @@ const addRating = asyncHandler(async (req, res) => {
       .status(400)
       .json(new ApiResponse(400, "All fields are required", {}));
   }
+  //check if student is enrolled or not
+  const enrolledStudentCheck = await Course.findOne({
+    _id: courseId,
+    studentsEnrolled: { $elemMatch: { $eq: userId } },
+  });
+  if (!enrolledStudentCheck) {
+    return res
+      .status(404)
+      .json(new ApiResponse(404, "Student is not enrolled in this course", {}));
+  }
   //check whether the user already reviewed the course or not
   const alreadyReviewed = await RatingAndReview.findOne({
     user: userId,
@@ -108,9 +118,10 @@ const getAvgRating = asyncHandler(async (req, res) => {
 
 const getAllRatings = asyncHandler(async (req, res) => {
   const allRatings = await RatingAndReview.find({})
+    .sort({ rating: "desc" })
     .populate({
       path: "user",
-      select: "firstName, lastName, image, email",
+      select: "firstName lastName image email",
     })
     .populate({
       path: "course",

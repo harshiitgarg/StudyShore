@@ -8,6 +8,7 @@ function generateUniqueOtp() {
     otp = generateRandomNumber(100000, 999999);
   } while (usedOtpSet.has(otp));
   usedOtpSet.add(otp);
+  console.log(otp);
   return otp;
 }
 

@@ -55,6 +55,13 @@ const courseSchema = new Schema(
         required: true,
       },
     ],
+    instructions: {
+      type: [String],
+    },
+    status: {
+      type: String,
+      enum: ["Draft", "Published"],
+    },
   },
   { timestamps: true }
 );

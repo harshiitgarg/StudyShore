@@ -25,7 +25,10 @@ const createCourse = asyncHandler(async (req, res) => {
       .status(400)
       .json(new ApiResponse(400, "Thumbnail is also required", {}));
   }
-  const thumbnail = await uploadOnCloudinary(thumbnailFilePath, process.env.FOLDER_NAME);
+  const thumbnail = await uploadOnCloudinary(
+    thumbnailFilePath,
+    process.env.FOLDER_NAME
+  );
   const course = await Course.create({
     courseName,
     courseDescription,
@@ -73,6 +76,44 @@ const showAllCourses = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Courses fetched successfully", courses));
 });
 
+const getAllCoursedetails = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const courseDetails = await Course.findById(courseId)
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "additionalDetails",
+      },
+    })
+    .populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+        select: "-videoUrl",
+      },
+    })
+    .populate("ratingAndReviews")
+    .populate("category");
+  if (!courseDetails) {
+    return res
+      .status(400)
+      .json(
+        new ApiResponse(
+          400,
+          `Could not found the course with id: ${courseId}`,
+          {}
+        )
+      );
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        `Successfully fetched the details of the course with id: ${courseId}`,
+        courseDetails
+      )
+    );
+});
 
-
-export { createCourse, showAllCourses };
+export { createCourse, showAllCourses, getAllCoursedetails };

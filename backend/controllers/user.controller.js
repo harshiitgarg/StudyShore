@@ -6,6 +6,11 @@ import { OTP } from "../models/otp.model.js";
 import { Profile } from "../models/profile.model.js";
 import mailSender from "../utils/mailSender.js";
 import { imageUrl } from "../constants.js";
+import otpGenerator from "otp-generator";
+import dotenv from "dotenv";
+dotenv.config({
+  path: "./.env",
+});
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -39,14 +44,22 @@ const sendOtp = asyncHandler(async (req, res) => {
       .status(401)
       .json(new ApiResponse(401, "User already exists", {}));
   }
-  const otp = generateUniqueOtp();
+  // const otp = generateUniqueOtp();
+  var otp = otpGenerator.generate(6, {
+    upperCaseAlphabets: false,
+    lowerCaseAlphabets: false,
+    specialChars: false,
+  });
+  console.log(otp);
   const savedOtp = await OTP.create({ email, otp });
   if (!savedOtp) {
     return res
       .status(500)
       .json(new ApiResponse(500, "Error occured while sending otp", {}));
   }
-  res.status(200).json(new ApiResponse(200, "Otp sent successfully", otp));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Otp sent successfully", otp));
 });
 
 const registerUser = asyncHandler(async (req, res) => {
