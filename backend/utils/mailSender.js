@@ -16,7 +16,7 @@ const mailSender = asyncHandler(async (email, title, body) => {
     subject: `${title}`, // Subject line
     html: `${body}`, // html body
   });
-  console.log(info);
+  // console.log(info);
   return info;
 });
 

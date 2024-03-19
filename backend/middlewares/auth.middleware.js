@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
@@ -14,7 +15,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     }
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const userId = decodedToken._id;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select("-password -refreshToken");
     if (!user) {
       return res.status(401).json(new ApiResponse(401, "Invalid token", {}));
     }

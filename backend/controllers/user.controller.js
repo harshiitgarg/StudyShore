@@ -44,13 +44,8 @@ const sendOtp = asyncHandler(async (req, res) => {
       .status(401)
       .json(new ApiResponse(401, "User already exists", {}));
   }
-  // const otp = generateUniqueOtp();
-  var otp = otpGenerator.generate(6, {
-    upperCaseAlphabets: false,
-    lowerCaseAlphabets: false,
-    specialChars: false,
-  });
-  console.log(otp);
+  const otp = generateUniqueOtp().toString();
+  // console.log(otp);
   const savedOtp = await OTP.create({ email, otp });
   if (!savedOtp) {
     return res
@@ -87,6 +82,7 @@ const registerUser = asyncHandler(async (req, res) => {
       .status(403)
       .json(new ApiResponse(403, "All fields are required", {}));
   }
+  console.log(firstName, lastName, email, otp, password, confirmPassword);
   if (password !== confirmPassword) {
     return res
       .status(400)
@@ -98,13 +94,14 @@ const registerUser = asyncHandler(async (req, res) => {
         )
       );
   }
-  const existingUser = await User.findOne({ $or: [{ firstName }, { email }] });
+  const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res
       .status(401)
       .json(new ApiResponse(401, "User already exists", {}));
   }
   const response = await OTP.findOne({ email });
+  console.log(response);
   if (!response) {
     return res.status(400).json(new ApiResponse(400, "OTP is not valid", {}));
   }
@@ -123,6 +120,7 @@ const registerUser = asyncHandler(async (req, res) => {
     additionDetails: profileDetails._id,
     image: `${imageUrl} ${firstName} ${lastName}`,
   });
+  newUser.password = undefined;
   if (!newUser) {
     return res
       .status(500)
@@ -150,7 +148,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!isPasswordCorrect) {
     return res.status(401).json(new ApiResponse(401, "Incorrect password", {}));
   }
-  const { accessToken, refreshToken } = generateAccessAndRefreshTokens(
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id
   );
   const loggedInUser = await User.findById(user._id).select([
@@ -175,6 +173,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword, confirmNewPassword } = req.body;
+  // console.log(currentPassword, newPassword, confirmNewPassword);
   if (!currentPassword || !newPassword || !confirmNewPassword) {
     return res
       .status(400)
@@ -186,6 +185,7 @@ const changePassword = asyncHandler(async (req, res) => {
       .json(new ApiResponse(400, "Please enter the same password", {}));
   }
   const user = await User.findById(req.user?.id);
+  console.log(req.user?._id);
   const isPasswordCorrect = await user.isPasswordCorrect(currentPassword);
   if (!isPasswordCorrect) {
     return res.status(400).json(new ApiResponse(400, "Incorrect password", {}));
@@ -203,4 +203,3 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 export { sendOtp, registerUser, loginUser, changePassword };
-

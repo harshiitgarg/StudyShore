@@ -14,7 +14,7 @@ const otpSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now(),
-      expires: 5 * 60,
+      expires: 15 * 60,
     },
   },
   { timestamps: true }
@@ -26,7 +26,7 @@ async function sendVerificationEmail(email, otp) {
       email,
       "Verification Email from StudyShore",
       otp
-    ); // I think error is happening while passing otp directly instead of html.
+    );
   } catch (error) {
     console.log(
       "Error occured while sending verification email:",
