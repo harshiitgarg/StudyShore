@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mailSender from "../utils/mailSender.js";
+import otpTemplate from "../mail/templates/emailVerification.mjs";
 
 const otpSchema = new Schema(
   {
@@ -25,7 +26,7 @@ async function sendVerificationEmail(email, otp) {
     const mailResponse = await mailSender(
       email,
       "Verification Email from StudyShore",
-      otp
+      otpTemplate(otp)
     );
   } catch (error) {
     console.log(

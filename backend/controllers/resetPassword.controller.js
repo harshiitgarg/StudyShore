@@ -16,6 +16,7 @@ const resetPasswordToken = asyncHandler(async (req, res) => {
       .json(new ApiResponse(400, "This email is not registered with us", {}));
   }
   const token = crypto.randomUUID();
+
   const updatedDetails = await User.findOneAndUpdate(
     { email },
     {
@@ -24,30 +25,20 @@ const resetPasswordToken = asyncHandler(async (req, res) => {
     },
     { new: true }
   );
+  console.log(updatedDetails.token);
   const url = `${resetPasswordUrl}/${token}`;
   const mailResponse = await mailSender(
     email,
     "Password reset token",
     `Your Link for email verification is ${url}. Please click this url to reset your password.`
   );
-  if (!mailResponse) {
-    return res
-      .status(500)
-      .json(
-        new ApiResponse(
-          500,
-          "Error occured while sending the password reset email. Please try again",
-          {}
-        )
-      );
-  }
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
         "Password reset link sent successfully. Please check your email for further process",
-        {}
+        mailResponse
       )
     );
 });

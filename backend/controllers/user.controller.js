@@ -6,7 +6,7 @@ import { OTP } from "../models/otp.model.js";
 import { Profile } from "../models/profile.model.js";
 import mailSender from "../utils/mailSender.js";
 import { imageUrl } from "../constants.js";
-import otpGenerator from "otp-generator";
+import passwordUpdated from "../mail/templates/changePassword.mjs";
 import dotenv from "dotenv";
 dotenv.config({
   path: "./.env",
@@ -82,7 +82,6 @@ const registerUser = asyncHandler(async (req, res) => {
       .status(403)
       .json(new ApiResponse(403, "All fields are required", {}));
   }
-  console.log(firstName, lastName, email, otp, password, confirmPassword);
   if (password !== confirmPassword) {
     return res
       .status(400)
@@ -117,7 +116,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     accountType,
-    additionDetails: profileDetails._id,
+    additionalDetails: profileDetails._id,
     image: `${imageUrl} ${firstName} ${lastName}`,
   });
   newUser.password = undefined;
@@ -184,8 +183,7 @@ const changePassword = asyncHandler(async (req, res) => {
       .status(400)
       .json(new ApiResponse(400, "Please enter the same password", {}));
   }
-  const user = await User.findById(req.user?.id);
-  console.log(req.user?._id);
+  const user = await User.findById(req.user?._id);
   const isPasswordCorrect = await user.isPasswordCorrect(currentPassword);
   if (!isPasswordCorrect) {
     return res.status(400).json(new ApiResponse(400, "Incorrect password", {}));
@@ -195,7 +193,7 @@ const changePassword = asyncHandler(async (req, res) => {
   const mailResponse = mailSender(
     user?.email,
     "Password updated successfully",
-    "Password is updated."
+    passwordUpdated(user.email, user.firstName)
   );
   return res
     .status(200)

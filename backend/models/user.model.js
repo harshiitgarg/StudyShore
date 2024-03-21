@@ -48,7 +48,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    additionDetails: {
+    additionalDetails: {
       type: Schema.Types.ObjectId,
       ref: "Profile",
     },
