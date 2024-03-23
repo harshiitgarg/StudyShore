@@ -6,45 +6,51 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createCourse = asyncHandler(async (req, res) => {
-  const { courseName, courseDescription, price, whatYouWillLearn, category } =
-    req.body;
+  const {
+    courseName,
+    courseDescription,
+    price,
+    whatYouWillLearn,
+    category,
+    tag,
+  } = req.body;
   if (
     !courseName ||
     !courseDescription ||
     !price ||
     !whatYouWillLearn ||
-    !category
+    !category ||
+    !tag
   ) {
     return res
       .status(400)
       .json(new ApiResponse(400, "All fields are required", {}));
   }
-  const thumbnailFilePath = req.files.thumbnail;
+  const thumbnailFilePath = req.file.path;
   if (!thumbnailFilePath) {
     return res
       .status(400)
       .json(new ApiResponse(400, "Thumbnail is also required", {}));
   }
-  const thumbnail = await uploadOnCloudinary(
-    thumbnailFilePath,
-    process.env.FOLDER_NAME
-  );
+  const thumbnail = await uploadOnCloudinary(thumbnailFilePath);
   const course = await Course.create({
     courseName,
     courseDescription,
     price,
     whatYouWillLearn,
     category,
+    tag,
     thumbnail: thumbnail.secure_url,
+    instructor: req.user._id,
   });
   if (!course) {
     return res
       .status(500)
       .json(new ApiResponse(500, "Error while creating the course", {}));
   }
-  const userId = req.user._id;
+  // const userId = req.user._id;
   await User.findByIdAndUpdate(
-    { userId },
+    req.user._id,
     {
       $push: {
         courses: course._id,
@@ -53,7 +59,7 @@ const createCourse = asyncHandler(async (req, res) => {
     { new: true }
   );
   await Category.findByIdAndUpdate(
-    { category },
+    category,
     {
       $push: {
         courses: course._id,

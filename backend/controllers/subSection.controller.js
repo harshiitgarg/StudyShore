@@ -1,18 +1,21 @@
 import { Section } from "../models/section.model.js";
 import { SubSection } from "../models/subSection.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 
 const createSubSection = asyncHandler(async (req, res) => {
   const { sectionId, title, description } = req.body;
-  const { videoLocalPath } = req.file;
+  const videoLocalPath = req.file.path;
   if (!title?.trim() || !description?.trim() || !videoLocalPath || !sectionId) {
     return res
       .status(400)
       .json(new ApiResponse(400, "All fields are required", {}));
   }
   const uploadedVideo = await uploadOnCloudinary(videoLocalPath);
-  console.log(uploadedVideo);
   const newSubSection = await SubSection.create({
     videoUrl: uploadedVideo.secure_url,
     duration: `${uploadedVideo.duration}`,
@@ -42,11 +45,11 @@ const createSubSection = asyncHandler(async (req, res) => {
 
 const updateSubSection = asyncHandler(async (req, res) => {
   const { sectionId, subSectionId, title, description } = req.body;
-  const { video } = req.files;
+  const videoLocalPath = req.file.path;
   if (
     !title?.trim() ||
     !description?.trim() ||
-    !video ||
+    !videoLocalPath ||
     !subSectionId ||
     !sectionId
   ) {
@@ -62,10 +65,8 @@ const updateSubSection = asyncHandler(async (req, res) => {
   }
   subSection.title = title;
   subSection.description = description;
-  const uploadedVideo = await uploadOnCloudinary(
-    video.tempFilePath,
-    process.env.FOLDER_NAME
-  );
+  // await deleteFromCloudinary(subSection?.videoUrl);
+  const uploadedVideo = await uploadOnCloudinary(videoLocalPath);
   subSection.videoUrl = uploadedVideo.secure_url;
   subSection.duration = `${uploadedVideo.duration}`;
   await subSection.save();

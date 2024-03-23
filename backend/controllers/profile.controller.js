@@ -76,9 +76,7 @@ const updateProfilePicture = asyncHandler(async (req, res) => {
 
 const deleteAccount = asyncHandler(async (req, res) => {
   const _id = req.user._id;
-  console.log(req.user);
   const user = await User.findById(_id);
-  console.log(user);
   await Profile.findByIdAndDelete(user.additionalDetails);
   for (const courseId of user.courses) {
     await Course.findByIdAndUpdate(

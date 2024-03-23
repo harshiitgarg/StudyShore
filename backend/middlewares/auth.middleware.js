@@ -30,7 +30,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
 
 const isStudent = asyncHandler(async (req, res, next) => {
   try {
-    if (!req.user?.accountType !== "Student") {
+    if (req.user?.accountType !== "Student") {
       return res
         .status(401)
         .json(new ApiResponse(401, "This is only for students", {}));
@@ -51,7 +51,7 @@ const isStudent = asyncHandler(async (req, res, next) => {
 
 const isInstructor = asyncHandler(async (req, res, next) => {
   try {
-    if (!req.user?.accountType !== "Instructor") {
+    if (req.user?.accountType !== "Instructor") {
       return res
         .status(401)
         .json(new ApiResponse(401, "This is only for instructors", {}));
@@ -72,7 +72,7 @@ const isInstructor = asyncHandler(async (req, res, next) => {
 
 const isAdmin = asyncHandler(async (req, res, next) => {
   try {
-    if (!req.user?.accountType !== "Admin") {
+    if (req.user.accountType !== "Admin") {
       return res
         .status(401)
         .json(new ApiResponse(401, "This is only for admins", {}));

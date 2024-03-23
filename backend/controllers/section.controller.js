@@ -89,7 +89,7 @@ const deleteSection = asyncHandler(async (req, res) => {
     return res.status(404).json(new ApiResponse(404, "Section not found", {}));
   }
   await SubSection.deleteMany({ _id: { $in: section.subSection } });
-  await Section.findByIdAndDelete({ sectionId });
+  await Section.findByIdAndDelete(sectionId);
   const updatedCourse = await Course.findById(courseId)
     .populate({
       path: "courseContent",

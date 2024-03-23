@@ -88,7 +88,7 @@ const getAvgRating = asyncHandler(async (req, res) => {
   const result = await RatingAndReview.aggregate([
     {
       $match: {
-        course: mongoose.Types.ObjectId(courseId),
+        course: new mongoose.Types.ObjectId(courseId),
       },
     },
     {
