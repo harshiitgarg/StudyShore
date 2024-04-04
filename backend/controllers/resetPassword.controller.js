@@ -27,7 +27,7 @@ const resetPasswordToken = asyncHandler(async (req, res) => {
   );
   console.log(updatedDetails.token);
   const url = `${resetPasswordUrl}/${token}`;
-  const mailResponse = await mailSender(
+  const mailResponse = mailSender(
     email,
     "Password reset token",
     `Your Link for email verification is ${url}. Please click this url to reset your password.`
