@@ -88,7 +88,8 @@ export const signup = (
   email,
   password,
   confirmPassword,
-  otp
+  otp,
+  navigate
 ) => {
   return async (dispatch) => {
     const toastId = toast.loading("Loading...");

@@ -23,7 +23,7 @@ const otpSchema = new Schema(
 
 async function sendVerificationEmail(email, otp) {
   try {
-    const mailResponse = await mailSender(
+    const mailResponse = mailSender(
       email,
       "Verification Email from StudyShore",
       otpTemplate(otp)

@@ -1,4 +1,5 @@
 import { resetPasswordUrl } from "../constants.js";
+import passwordUpdated from "../mail/templates/changePassword.mjs";
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -25,7 +26,6 @@ const resetPasswordToken = asyncHandler(async (req, res) => {
     },
     { new: true }
   );
-  console.log(updatedDetails.token);
   const url = `${resetPasswordUrl}/${token}`;
   const mailResponse = mailSender(
     email,
@@ -66,6 +66,11 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
   user.password = password;
   await user.save({ validateBeforeSave: false });
+  const response = mailSender(
+    user.email,
+    "Password updated successfully",
+    passwordUpdated(user.email, user.firstName)
+  );
   return res
     .status(200)
     .json(new ApiResponse(200, "Password reset successfully", {}));

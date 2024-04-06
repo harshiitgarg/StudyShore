@@ -22,6 +22,7 @@ import courseRouter from "./routes/course.route.js";
 import sectionRouter from "./routes/section.route.js";
 import subSectionRouter from "./routes/subSection.route.js";
 import ratingAndReviewRouter from "./routes/ratingAndReview.route.js";
+import contactRouter from "./routes/contact.route.js";
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/profile", profileRouter);
@@ -30,5 +31,6 @@ app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/section", sectionRouter);
 app.use("/api/v1/subSection", subSectionRouter);
 app.use("/api/v1/ratingAndReview", ratingAndReviewRouter);
+app.use("/api/v1/reach", contactRouter)
 
 export { app };

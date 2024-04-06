@@ -8,6 +8,9 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import UpdatePassword from "./pages/UpdatePassword.jsx";
+import VerifyEmail from "./pages/VerifyEmail.jsx";
+import About from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
 
 function App() {
   return (
@@ -20,6 +23,16 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password/:id" element={<UpdatePassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route
+            path="/about"
+            element={
+              // <OpenRoute>
+              <About />
+              // {/* </OpenRoute> */}
+            }
+          />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
     </Provider>
