@@ -16,36 +16,35 @@ export const login = (email, password, navigate) => {
   return async (dispatch) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
+
     try {
       //get the response from the api
       const response = await apiConnector("POST", LOGIN_API, {
         email,
         password,
       });
+
       console.log("LOGIN API RESPONSE............", response);
+
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
       toast.success("Login Successful");
 
       //   dispatch the action to set token and user in the redux store
-      dispatch(setToken(response.data.refreshToken));
-      const userImage = response.data?.user?.image
-        ? response.data.user.image
-        : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.user?.firstName} ${response.data.user?.lastName}`;
-      dispatch(setUser({ ...response.data.user, image: userImage }));
+      dispatch(setToken(response.data.data.refreshToken));
+      const userImage = response.data.data?.user?.image
+        ? response.data.data.user.image
+        : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.data.user?.firstName} ${response.data.data.user?.lastName}`;
+      dispatch(setUser({ ...response.data.data.user, image: userImage }));
 
       //   set the values of token and user in the localStorage so that it can be used for further purposes
-      if (response.data.refreshToken)
-        localStorage.setItem(
-          "refreshToken",
-          JSON.stringify(response.data.refreshToken)
-        );
+      localStorage.setItem(
+        "refreshToken",
+        JSON.stringify(response.data.data.refreshToken)
+      );
       //   else localStorage.setItem("refreshToken", undefined);
-      if (response.data.user)
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-      //   else localStorage.setItem("user", undefined);
-
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
       //    finally navigate after the login to my profile page
       navigate("/dashboard/my-profile");
     } catch (error) {
@@ -118,6 +117,17 @@ export const signup = (
     }
     dispatch(setLoading(false));
     toast.dismiss(toastId);
+  };
+};
+
+export const logout = (navigate) => {
+  return (dispatch) => {
+    dispatch(setToken(null));
+    dispatch(setUser(null));
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    toast.success("Logged out successfully");
+    navigate("/");
   };
 };
 
