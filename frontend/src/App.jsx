@@ -14,6 +14,7 @@ import Contact from "./pages/Contact.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import MyProfile from "./components/Dashboard/MyProfile.jsx";
 import PrivateRoute from "./components/core/Auth/PrivateRoute.jsx";
+import Settings from "./components/Dashboard/Settings/index.jsx";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             }
           >
             <Route path="dashboard/my-profile" element={<MyProfile />} />
+            <Route path="dashboard/settings" element={<Settings />} />
           </Route>
         </Routes>
       </div>

@@ -6,14 +6,14 @@ import jwt from "jsonwebtoken";
 const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
     const token =
-      req.cookies?.accessToken ||
+      req.cookies?.refreshToken ||
       req.header("Authorization")?.replace("Bearer ", "");
     if (!token) {
       return res
         .status(401)
         .json(new ApiResponse(401, "Unauthorized request", {}));
     }
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     const userId = decodedToken._id;
     const user = await User.findById(userId).select("-password -refreshToken");
     if (!user) {

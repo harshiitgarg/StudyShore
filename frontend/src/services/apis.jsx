@@ -15,3 +15,7 @@ export const endpoints = {
 export const contactusEndpoint = {
   CONTACT_US_API: BASE_URL + "/reach/contact",
 };
+
+export const settingsEndpoints = {
+  UPDATE_PROFILE_PICTURE: BASE_URL + "/profile/updateProfilePicture",
+};

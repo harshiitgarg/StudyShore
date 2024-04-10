@@ -53,7 +53,7 @@ const updateProfilePicture = asyncHandler(async (req, res) => {
   }
   // update the profile picture
   const updatedUser = await User.findByIdAndUpdate(
-    req.user._id,
+    req?.user._id,
     {
       $set: {
         image: image.secure_url,
