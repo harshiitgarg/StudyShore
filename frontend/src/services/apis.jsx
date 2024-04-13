@@ -18,4 +18,6 @@ export const contactusEndpoint = {
 
 export const settingsEndpoints = {
   UPDATE_PROFILE_PICTURE: BASE_URL + "/profile/updateProfilePicture",
+  UPDATE_PROFILE: BASE_URL + "/profile/updateDetails",
+  DELETE_PROFILE: BASE_URL + "/profile/deleteProfile",
 };

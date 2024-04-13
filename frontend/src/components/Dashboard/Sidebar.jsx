@@ -8,13 +8,20 @@ import { logout } from "../../services/operations/authAPI";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-  const { loading: profileLoading } = useSelector((store) => store.profile);
+  // const { loading: profileLoading } = useSelector((store) => store.profile);
   const { loading: authLoading } = useSelector((store) => store.auth);
   const { user } = useSelector((store) => store.profile);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  if (profileLoading || authLoading) {
+  // if (profileLoading || authLoading) {
+  //   return (
+  //     <div className="grid h-[calc(100vh-3.5rem)] min-w-[220px] items-center border-r-[1px] border-r-richblack-700 bg-richblack-800">
+  //       <div className="spinner"></div>
+  //     </div>
+  //   );
+  // }
+  if ( authLoading) {
     return (
       <div className="grid h-[calc(100vh-3.5rem)] min-w-[220px] items-center border-r-[1px] border-r-richblack-700 bg-richblack-800">
         <div className="spinner"></div>

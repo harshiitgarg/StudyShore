@@ -8,12 +8,11 @@ const ChangeProfilePicture = () => {
   const fileInputRef = useRef(null);
 
   const { token } = useSelector((store) => store.auth);
-  const { user } = useSelector((store) => store.profile);
+  const { user, loading } = useSelector((store) => store.profile);
   const dispatch = useDispatch();
 
   const [imageFile, setImageFile] = useState(null);
   const [previewSource, setPreviewSource] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -38,13 +37,12 @@ const ChangeProfilePicture = () => {
 
   const handleFileUpload = () => {
     try {
-    //   console.log("uploading...");
-      setLoading(true);
+      //   console.log("uploading...");
       const formData = new FormData();
       formData.append("imageFile", imageFile);
-    //   console.log("formdata", formData.imageFile);
+      //   console.log("formdata", formData.imageFile);
       dispatch(updateProfilePicture(token, formData));
-      setLoading(false);
+      console.log(loading);
     } catch (error) {
       console.log("ERROR MESSAGE - ", error.message);
     }

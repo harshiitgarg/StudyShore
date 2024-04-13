@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import MyProfile from "./components/Dashboard/MyProfile.jsx";
 import PrivateRoute from "./components/core/Auth/PrivateRoute.jsx";
 import Settings from "./components/Dashboard/Settings/index.jsx";
+import OpenRoute from "./components/core/Auth/OpenRoute.jsx";
 
 function App() {
   return (
@@ -23,19 +24,47 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/update-password/:id" element={<UpdatePassword />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
           <Route
-            path="/about"
+            path="/login"
             element={
-              // <OpenRoute>
-              <About />
-              // {/* </OpenRoute> */}
+              <OpenRoute>
+                <Login />
+              </OpenRoute>
             }
           />
+          <Route
+            path="/signup"
+            element={
+              <OpenRoute>
+                <Signup />
+              </OpenRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <OpenRoute>
+                <ForgotPassword />
+              </OpenRoute>
+            }
+          />
+          <Route
+            path="/update-password/:id"
+            element={
+              <OpenRoute>
+                <UpdatePassword />
+              </OpenRoute>
+            }
+          />
+          <Route
+            path="/verify-email"
+            element={
+              <OpenRoute>
+                <VerifyEmail />
+              </OpenRoute>
+            }
+          />
+          <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route
             element={
@@ -44,8 +73,22 @@ function App() {
               </PrivateRoute>
             }
           >
-            <Route path="dashboard/my-profile" element={<MyProfile />} />
-            <Route path="dashboard/settings" element={<Settings />} />
+            <Route
+              path="dashboard/my-profile"
+              element={
+                <PrivateRoute>
+                  <MyProfile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="dashboard/settings"
+              element={
+                <PrivateRoute>
+                  <Settings />
+                </PrivateRoute>
+              }
+            />
           </Route>
         </Routes>
       </div>

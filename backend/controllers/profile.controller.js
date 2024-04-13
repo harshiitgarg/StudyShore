@@ -9,15 +9,27 @@ import {
 } from "../utils/cloudinary.js";
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const { gender, contactNumber, dateOfBirth = "", about = "" } = req.body;
+  const {
+    firstName = "",
+    lastName = "",
+    gender = "",
+    contactNumber = "",
+    dateOfBirth = "",
+    about = "",
+  } = req.body;
   if (!gender || !contactNumber) {
     return res
       .status(400)
       .json(new ApiResponse(400, "All fields are required", {}));
   }
-  const user = await User.findById(req.user._id);
-  const profileDetails = await Profile.findById(user.additionalDetails);
-  console.log(user.additionalDetails);
+  const userDetails = await User.findById(req.user._id);
+  const profileDetails = await Profile.findById(userDetails.additionalDetails);
+  console.log(userDetails);
+  const user = await User.findByIdAndUpdate(req.user._id, {
+    firstName,
+    lastName,
+  });
+  await user.save();
   profileDetails.gender = gender;
   profileDetails.contactNumber = contactNumber;
   profileDetails.dateOfBirth = dateOfBirth;
