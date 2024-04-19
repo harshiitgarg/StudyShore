@@ -26,7 +26,7 @@ const createCourse = asyncHandler(async (req, res) => {
       .status(400)
       .json(new ApiResponse(400, "All fields are required", {}));
   }
-  const thumbnailFilePath = req.file.path;
+  const thumbnailFilePath = req.file?.path;
   if (!thumbnailFilePath) {
     return res
       .status(400)
@@ -70,6 +70,58 @@ const createCourse = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, "Course created successfully", course));
+});
+
+const editCourse = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const updates = req.body;
+  const course = await Course.findById(courseId);
+  if (!course) {
+    return res.status(404).json(new ApiResponse(404, "Course not found", {}));
+  }
+  if (req.file) {
+    console.log("Thumbnail update");
+    const thumbnailFilePath = req.file.path;
+    const thumbnail = await uploadOnCloudinary(thumbnailFilePath);
+    course.thumbnail = thumbnail.secure_url;
+  }
+  //update only the fields that are present in the request body
+  for (const key in updates) {
+    if (updates.hasOwnProperty(key)) {
+      if (key == "tag" || key == "instructions") {
+        course[key] = JSON.parse(updates[key]);
+      } else {
+        course[key] = updates[key];
+      }
+    }
+  }
+  await course.save();
+
+  const updatedCourse = await Course.findOne({
+    _id: courseId,
+  })
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "additionalDetails",
+      },
+    })
+    .populate("category")
+    .populate("ratingAndReviews")
+    .populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+      },
+    })
+    .exec();
+
+  if (!updatedCourse) {
+    return res.status(500).json(new ApiResponse(500, "Course not updated", {}));
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Course updated successfully", updatedCourse));
 });
 
 const showAllCourses = asyncHandler(async (req, res) => {
@@ -122,4 +174,4 @@ const getAllCoursedetails = asyncHandler(async (req, res) => {
     );
 });
 
-export { createCourse, showAllCourses, getAllCoursedetails };
+export { createCourse, editCourse, showAllCourses, getAllCoursedetails };

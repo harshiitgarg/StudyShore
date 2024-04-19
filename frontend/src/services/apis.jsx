@@ -21,3 +21,10 @@ export const settingsEndpoints = {
   UPDATE_PROFILE: BASE_URL + "/profile/updateDetails",
   DELETE_PROFILE: BASE_URL + "/profile/deleteProfile",
 };
+
+export const courseEndpoints = {
+  COURSE_DETAILS_API: BASE_URL + "/course/getAllCoursedetails",
+  COURSE_CATEGORIES_API: BASE_URL + "/category/showAllCategories",
+  EDIT_COURSE_API: BASE_URL + "/course/editCourse",
+  ADD_COURSE_API: BASE_URL + "/course/createCourse",
+};

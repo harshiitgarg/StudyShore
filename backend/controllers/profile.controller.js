@@ -117,6 +117,8 @@ const getAllUserDetails = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "User data fetched successfully", userDetails));
 });
 
+
+
 export {
   updateProfile,
   deleteAccount,

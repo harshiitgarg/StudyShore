@@ -2,8 +2,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/common/Navbar";
-import { Provider } from "react-redux";
-import store from "./redux-store/store.jsx";
+import { useSelector } from "react-redux";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
@@ -16,83 +15,103 @@ import MyProfile from "./components/Dashboard/MyProfile.jsx";
 import PrivateRoute from "./components/core/Auth/PrivateRoute.jsx";
 import Settings from "./components/Dashboard/Settings/index.jsx";
 import OpenRoute from "./components/core/Auth/OpenRoute.jsx";
+import { ACCOUNT_TYPE } from "./utils/constants.jsx";
+import EnrolledCourse from "./components/Dashboard/EnrolledCourse.jsx";
+import Cart from "./components/Dashboard/Cart/index.jsx";
+import AddCourse from "./components/Dashboard/AddCourse/index.jsx";
 
 function App() {
+  const { user } = useSelector((store) => store.profile);
   return (
-    <Provider store={store}>
-      <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
+    <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/login"
+          element={
+            <OpenRoute>
+              <Login />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <OpenRoute>
+              <Signup />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <OpenRoute>
+              <ForgotPassword />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="/update-password/:id"
+          element={
+            <OpenRoute>
+              <UpdatePassword />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="/verify-email"
+          element={
+            <OpenRoute>
+              <VerifyEmail />
+            </OpenRoute>
+          }
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        >
           <Route
-            path="/login"
-            element={
-              <OpenRoute>
-                <Login />
-              </OpenRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <OpenRoute>
-                <Signup />
-              </OpenRoute>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <OpenRoute>
-                <ForgotPassword />
-              </OpenRoute>
-            }
-          />
-          <Route
-            path="/update-password/:id"
-            element={
-              <OpenRoute>
-                <UpdatePassword />
-              </OpenRoute>
-            }
-          />
-          <Route
-            path="/verify-email"
-            element={
-              <OpenRoute>
-                <VerifyEmail />
-              </OpenRoute>
-            }
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route
+            path="/dashboard/my-profile"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <MyProfile />
               </PrivateRoute>
             }
-          >
-            <Route
-              path="dashboard/my-profile"
-              element={
-                <PrivateRoute>
-                  <MyProfile />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="dashboard/settings"
-              element={
-                <PrivateRoute>
-                  <Settings />
-                </PrivateRoute>
-              }
-            />
-          </Route>
-        </Routes>
-      </div>
-    </Provider>
+          />
+          <Route
+            path="/dashboard/settings"
+            element={
+              <PrivateRoute>
+                <Settings />
+              </PrivateRoute>
+            }
+          />
+          {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+            <>
+              <Route
+                path="/dashboard/enrolled-courses"
+                element={<EnrolledCourse />}
+              />
+              <Route path="/dashboard/cart" element={<Cart />} />
+            </>
+          )}
+          {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
+            <>
+              {/* <Route path="dashboard/instructor" element={<Instructor />} /> */}
+              <Route path="dashboard/add-course" element={<AddCourse />} />
+              {/* <Route path="dashboard/my-courses" element={<MyCourses />} /> */}
+              {/* <Route path="dashboard/edit-course/:courseId" element={<EditCourse />} /> */}
+            </>
+          )}
+        </Route>
+      </Routes>
+    </div>
   );
 }
 
