@@ -28,3 +28,15 @@ export const courseEndpoints = {
   EDIT_COURSE_API: BASE_URL + "/course/editCourse",
   ADD_COURSE_API: BASE_URL + "/course/createCourse",
 };
+
+export const sectionEndpoints = {
+  CREATE_SECTION_API: BASE_URL + "/section/createSection",
+  UPDATE_SECTION_API: BASE_URL + "/section/updateSection",
+  DELETE_SECTION_API: BASE_URL + "/section/deleteSection",
+};
+
+export const subSectionEndpoints = {
+  CREATE_SUBSECTION_API: BASE_URL + "/subSection/createSubSection",
+  UPDATE_SUBSECTION_API: BASE_URL + "/subSection/updateSubSection",
+  DELETE_SUBSECTION_API: BASE_URL + "/subSection/deleteSubSection",
+};

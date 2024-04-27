@@ -21,9 +21,19 @@ const courseSlice = createSlice({
     setPaymentLoading: (state, action) => {
       state.paymentLoading = action.payload;
     },
+    resetCourseState: (state) => {
+      state.step = 1;
+      state.course = null;
+      state.editCourse = false;
+    },
   },
 });
 
 export default courseSlice.reducer;
-export const { setCourse, setStep, setEditCourse, setPaymentLoading } =
-  courseSlice.actions;
+export const {
+  setCourse,
+  setStep,
+  setEditCourse,
+  setPaymentLoading,
+  resetCourseState,
+} = courseSlice.actions;

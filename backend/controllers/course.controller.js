@@ -87,12 +87,10 @@ const editCourse = asyncHandler(async (req, res) => {
   }
   //update only the fields that are present in the request body
   for (const key in updates) {
-    if (updates.hasOwnProperty(key)) {
-      if (key == "tag" || key == "instructions") {
-        course[key] = JSON.parse(updates[key]);
-      } else {
-        course[key] = updates[key];
-      }
+    if (key == "tag" || key == "instructions") {
+      course[key] = JSON.parse(updates[key]);
+    } else {
+      course[key] = updates[key];
     }
   }
   await course.save();

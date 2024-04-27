@@ -50,7 +50,7 @@ const updateSection = asyncHandler(async (req, res) => {
   const updatedSection = await Section.findByIdAndUpdate(
     sectionId,
     {
-      sectionName: sectionName,
+      sectionName,
     },
     { new: true }
   );

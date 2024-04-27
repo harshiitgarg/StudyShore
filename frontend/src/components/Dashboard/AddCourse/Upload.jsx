@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { useDropzone } from "react-dropzone";
 import { Player } from "video-react";
 import { FiUploadCloud } from "react-icons/fi";
@@ -14,7 +13,6 @@ const Upload = ({
   viewData = null,
   editData = null,
 }) => {
-  const { course } = useSelector((store) => store.course);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewSource, setPreviewSource] = useState(
     viewData ? viewData : editData ? editData : ""
@@ -22,7 +20,6 @@ const Upload = ({
   const inputRef = useRef();
 
   const onDrop = (acceptedFiles) => {
-    console.log(acceptedFiles);
     const file = acceptedFiles[0];
     if (file) {
       previewFile(file);
