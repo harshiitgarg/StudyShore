@@ -17,7 +17,7 @@ const ChipInput = ({
 
   useEffect(() => {
     if (editCourse) {
-      setChips(course?.tag);
+      setChips(course?.tags);
     }
     register(name, { required: true, validate: (value) => value.length > 0 });
   }, []);

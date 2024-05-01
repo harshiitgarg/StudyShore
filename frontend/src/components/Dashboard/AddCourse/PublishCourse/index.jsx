@@ -32,36 +32,8 @@ export default function PublishCourse() {
     navigate("/dashboard/my-courses");
   };
 
-  //   const handleCoursePublish = async () => {
-  //     // check if form has been updated or not
-  //     if (
-  //       (course?.status === COURSE_STATUS.PUBLISHED &&
-  //         getValues("public") === true) ||
-  //       (course?.status === COURSE_STATUS.DRAFT && getValues("public") === false)
-  //     ) {
-  //       // form has not been updated
-  //       // no need to make api call
-  //       goToCourses();
-  //       return;
-  //     }
-  //     const formData = new FormData();
-  //     formData.append("courseId", course._id);
-  //     const courseStatus = getValues("public")
-  //       ? COURSE_STATUS.PUBLISHED
-  //       : COURSE_STATUS.DRAFT;
-  //     formData.append("status", courseStatus);
-  //     console.log(formData);
-  //     setLoading(true);
-  //     const result = await editCourseDetails(formData, token);
-  //     if (result) {
-  //       goToCourses();
-  //     }
-  //     setLoading(false);
-  //   };
 
-  const onSubmit = async (data) => {
-    console.log(data);
-    // handleCoursePublish();
+  const onSubmit = async () => {
     if (
       (course?.status === COURSE_STATUS.PUBLISHED &&
         getValues("public") === true) ||

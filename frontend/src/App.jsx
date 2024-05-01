@@ -19,6 +19,8 @@ import { ACCOUNT_TYPE } from "./utils/constants.jsx";
 import EnrolledCourse from "./components/Dashboard/EnrolledCourse.jsx";
 import Cart from "./components/Dashboard/Cart/index.jsx";
 import AddCourse from "./components/Dashboard/AddCourse/index.jsx";
+import MyCourses from "./components/Dashboard/MyCourses.jsx";
+import EditCourse from "./components/Dashboard/EditCourse/index.jsx";
 
 function App() {
   const { user } = useSelector((store) => store.profile);
@@ -105,8 +107,11 @@ function App() {
             <>
               {/* <Route path="dashboard/instructor" element={<Instructor />} /> */}
               <Route path="dashboard/add-course" element={<AddCourse />} />
-              {/* <Route path="dashboard/my-courses" element={<MyCourses />} /> */}
-              {/* <Route path="dashboard/edit-course/:courseId" element={<EditCourse />} /> */}
+              <Route path="dashboard/my-courses" element={<MyCourses />} />
+              <Route
+                path="dashboard/edit-course/:courseId"
+                element={<EditCourse />}
+              />
             </>
           )}
         </Route>

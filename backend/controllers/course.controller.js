@@ -4,6 +4,10 @@ import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { Section } from "../models/section.model.js";
+import { SubSection } from "../models/subSection.model.js";
+import { CourseProgress } from "../models/courseProgress.model.js";
+import convertSecondsToDuration from "../utils/secToDuration.js";
 
 const createCourse = asyncHandler(async (req, res) => {
   const {
@@ -122,6 +126,36 @@ const editCourse = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Course updated successfully", updatedCourse));
 });
 
+const deleteCourse = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const course = await Course.findById(courseId);
+  if (!course) {
+    return res.status(404).json(new ApiResponse(404, "No course found"));
+  }
+  // unenroll students from the course
+  const studentsEnrolled = course.studentsEnrolled;
+  for (const studentId of studentsEnrolled) {
+    await User.findByIdAndUpdate(studentId, { $pull: { courses: courseId } });
+  }
+
+  // delete sections and subsections
+  const sections = course.courseContent;
+  for (const sectionId of sections) {
+    const section = await Section(sectionId);
+    if (section) {
+      const subSections = section.subSection;
+      for (const subSectionId of subSections) {
+        await SubSection.findByIdAndDelete(subSectionId);
+      }
+    }
+    await Section.findByIdAndDelete(sectionId);
+  }
+  await Course.findByIdAndDelete(courseId);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Course deleted successfully", {}));
+});
+
 const showAllCourses = asyncHandler(async (req, res) => {
   const courses = await Course.find({});
   if (!courses) {
@@ -172,4 +206,84 @@ const getAllCoursedetails = asyncHandler(async (req, res) => {
     );
 });
 
-export { createCourse, editCourse, showAllCourses, getAllCoursedetails };
+const getInstructorCourses = asyncHandler(async (req, res) => {
+  const instructorId = req.user.id;
+  const instructorCourses = await Course.find({
+    instructor: instructorId,
+  }).sort({ createdAt: -1 });
+  if (!instructorCourses) {
+    return res
+      .status(500)
+      .json(new ApiResponse(500, "Failed to retrieve the courses"));
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "Successfully fetched the courses",
+        instructorCourses
+      )
+    );
+});
+
+const getFullCourseDetails = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const userId = req.user.id;
+  const courseDetails = await Course.findOne(courseId)
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "additionalDetails",
+      },
+    })
+    .populate("category")
+    .populate("ratingAndReviews")
+    .populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+      },
+    })
+    .exec();
+
+  if (!courseDetails) {
+    return res
+      .status(404)
+      .json(
+        new ApiResponse(404, `Could not find course with id: ${courseId}`, {})
+      );
+  }
+
+  let courseProgressCount = await CourseProgress.findOne({
+    courseId: courseId,
+    userId: userId,
+  });
+  console.log("courseProgressCount : ", courseProgressCount);
+
+  let totalDurationInSeconds = 0;
+  courseDetails.courseContent.forEach((content) => {
+    content.subSection.forEach((subSection) => {
+      const timeDurationInSeconds = parseInt(subSection.timeDuration);
+      totalDurationInSeconds += timeDurationInSeconds;
+    });
+  });
+
+  const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+  return res.status(200).json(
+    new ApiResponse(200, "Course details fetched successfully", {
+      courseDetails,
+      totalDuration,
+    })
+  );
+});
+
+export {
+  createCourse,
+  editCourse,
+  deleteCourse,
+  showAllCourses,
+  getAllCoursedetails,
+  getInstructorCourses,
+  getFullCourseDetails,
+};

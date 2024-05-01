@@ -35,15 +35,14 @@ const CourseInformationForm = () => {
     const getCategories = async () => {
       setLoading(true);
       const categories = await fetchCourseCategories();
-      if (categories.length > 1) {
+      if (categories?.length > 1) {
         setCourseCategories(categories);
       }
-      console.log(courseCategories);
       setLoading(false);
     };
     // if form is in edit mode
     if (editCourse) {
-      // console.log("data populated", editCourse)
+      console.log("data populated", editCourse);
       setValue("courseTitle", course.courseName);
       setValue("courseShortDesc", course.courseDescription);
       setValue("coursePrice", course.price);
