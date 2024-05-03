@@ -44,3 +44,7 @@ export const subSectionEndpoints = {
   UPDATE_SUBSECTION_API: BASE_URL + "/subSection/updateSubSection",
   DELETE_SUBSECTION_API: BASE_URL + "/subSection/deleteSubSection",
 };
+
+export const catalogData = {
+  CATALOGPAGEDATA_API: BASE_URL + "/category/getCategoryPageDetails",
+};

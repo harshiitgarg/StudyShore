@@ -21,6 +21,7 @@ import Cart from "./components/Dashboard/Cart/index.jsx";
 import AddCourse from "./components/Dashboard/AddCourse/index.jsx";
 import MyCourses from "./components/Dashboard/MyCourses.jsx";
 import EditCourse from "./components/Dashboard/EditCourse/index.jsx";
+import Catalog from "./pages/Catalog.jsx";
 
 function App() {
   const { user } = useSelector((store) => store.profile);
@@ -115,6 +116,7 @@ function App() {
             </>
           )}
         </Route>
+        <Route path="/catalog/:catalogName" element={<Catalog />} />
       </Routes>
     </div>
   );
