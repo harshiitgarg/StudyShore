@@ -44,7 +44,6 @@ const showAllCategories = asyncHandler(async (req, res) => {
 
 const categoryPageDetails = asyncHandler(async (req, res) => {
   const { categoryId } = req.body;
-  console.log("PRINTING CATEGORY ID: ", categoryId);
   if (!categoryId || !mongoose.Types.ObjectId.isValid(categoryId)) {
     return res
       .status(400)
@@ -98,7 +97,7 @@ const categoryPageDetails = asyncHandler(async (req, res) => {
 
   const allCourses = allCategories.flatMap((category) => category.courses);
   const mostSellingCourses = allCourses
-    .sort((a, b) => b.sold - a.sold)
+    .sort((a, b) => b.price - a.price)
     .slice(0, 10);
   // console.log("mostSellingCourses COURSE", mostSellingCourses)
 

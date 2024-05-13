@@ -50,7 +50,6 @@ export default function PublishCourse() {
       ? COURSE_STATUS.PUBLISHED
       : COURSE_STATUS.DRAFT;
     formData.append("status", courseStatus);
-    console.log(formData);
     setLoading(true);
     const result = await editCourseDetails(formData, token);
     if (result) {

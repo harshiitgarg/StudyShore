@@ -62,7 +62,7 @@ const CourseInformationForm = () => {
       currentValues.courseTitle !== course.courseName ||
       currentValues.courseShortDesc !== course.courseDescription ||
       currentValues.coursePrice !== course.price ||
-      currentValues.courseTags.toString() !== course.tag.toString() ||
+      currentValues.courseTags.toString() !== course.tags.toString() ||
       currentValues.courseBenefits !== course.whatYouWillLearn ||
       currentValues.courseCategory._id !== course.category._id ||
       currentValues.courseRequirements.toString() !==
@@ -93,8 +93,8 @@ const CourseInformationForm = () => {
         if (currentValues.coursePrice !== course.price) {
           formData.append("price", data.coursePrice);
         }
-        if (currentValues.courseTags.toString() !== course.tag.toString()) {
-          formData.append("tag", JSON.stringify(data.courseTags));
+        if (currentValues.courseTags.toString() !== course.tags.toString()) {
+          formData.append("tags", JSON.stringify(data.courseTags));
         }
         if (currentValues.courseBenefits !== course.whatYouWillLearn) {
           formData.append("whatYouWillLearn", data.courseBenefits);
@@ -116,7 +116,7 @@ const CourseInformationForm = () => {
         }
         // console.log("Edit Form data: ", formData)
         setLoading(true);
-        const res = await editCourseDetails(updates, token);
+        const res = await editCourseDetails(formData, token);
         setLoading(false);
         if (res) {
           dispatch(setStep(2));
@@ -127,18 +127,20 @@ const CourseInformationForm = () => {
       }
       return;
     }
-
+    const currentValues = getValues();
+    console.log(currentValues);
     const formData = new FormData();
     formData.append("courseName", data.courseTitle);
     formData.append("courseDescription", data.courseShortDesc);
     formData.append("price", data.coursePrice);
-    formData.append("tag", JSON.stringify(data.courseTags));
+    formData.append("tags", JSON.stringify(data.courseTags));
     formData.append("whatYouWillLearn", data.courseBenefits);
     formData.append("category", data.courseCategory);
     formData.append("status", COURSE_STATUS.DRAFT);
     formData.append("instructions", JSON.stringify(data.courseRequirements));
     formData.append("thumbnail", data.thumbnail);
     setLoading(true);
+    console.log(formData);
 
     const result = await addCourseDetails(formData, token);
     if (result) {

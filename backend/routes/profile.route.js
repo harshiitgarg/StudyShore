@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   deleteAccount,
   getAllUserDetails,
+  getEnrolledCourses,
   updateProfile,
   updateProfilePicture,
 } from "../controllers/profile.controller.js";
@@ -16,5 +17,6 @@ router
 router.route("/updateDetails").put(verifyJWT, updateProfile);
 router.route("/").get(verifyJWT, getAllUserDetails);
 router.route("/deleteProfile").delete(verifyJWT, deleteAccount);
+router.get("/getEnrolledCourses", verifyJWT, getEnrolledCourses);
 
 export default router;

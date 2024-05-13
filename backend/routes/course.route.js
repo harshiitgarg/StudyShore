@@ -17,7 +17,7 @@ router
   .route("/createCourse")
   .post(verifyJWT, isInstructor, upload.single("thumbnail"), createCourse);
 router.route("/showAllCourses").get(showAllCourses);
-router.route("/getAllCoursedetails").get(getAllCoursedetails);
+router.route("/getAllCoursedetails").post(getAllCoursedetails);
 router
   .route("/editCourse")
   .post(verifyJWT, isInstructor, upload.single("thumbnail"), editCourse);

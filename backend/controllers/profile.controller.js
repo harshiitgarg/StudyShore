@@ -1,4 +1,5 @@
 import { Course } from "../models/course.model.js";
+import { CourseProgress } from "../models/courseProgress.model.js";
 import { Profile } from "../models/profile.model.js";
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -7,6 +8,7 @@ import {
   deleteFromCloudinary,
   uploadOnCloudinary,
 } from "../utils/cloudinary.js";
+import convertSecondsToDuration from "../utils/secToDuration.js";
 
 const updateProfile = asyncHandler(async (req, res) => {
   const {
@@ -24,7 +26,6 @@ const updateProfile = asyncHandler(async (req, res) => {
   }
   const userDetails = await User.findById(req.user._id);
   const profileDetails = await Profile.findById(userDetails.additionalDetails);
-  console.log(userDetails);
   const user = await User.findByIdAndUpdate(req.user._id, {
     firstName,
     lastName,
@@ -117,11 +118,79 @@ const getAllUserDetails = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "User data fetched successfully", userDetails));
 });
 
+const getEnrolledCourses = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  let userDetails = await User.findOne({
+    _id: userId,
+  })
+    .populate({
+      path: "courses",
+      populate: {
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      },
+    })
+    .exec();
 
+  var subSectionLength = 0;
+
+  for (let i = 0; i < userDetails.courses.length; i++) {
+    let totalDurationInSeconds = 0;
+    subSectionLength = 0;
+
+    for (let j = 0; j < userDetails.courses[i].courseContent.length; j++) {
+      totalDurationInSeconds += userDetails.courses[i].courseContent[
+        j
+      ].subSection.reduce((acc, curr) => acc + parseInt(curr.duration), 0);
+
+      userDetails.courses[i].courseContent[j].duration =
+        convertSecondsToDuration(totalDurationInSeconds);
+      subSectionLength +=
+        userDetails.courses[i].courseContent[j].subSection.length;
+    }
+
+    let courseProgressCount = await CourseProgress.findOne({
+      courseId: userDetails.courses[i]._id,
+      userId: userId,
+    });
+    courseProgressCount = courseProgressCount?.completedVideos.length;
+
+    if (subSectionLength === 0) {
+      userDetails.courses[i].progressPercentage = 100;
+    } else {
+      // To make it up to 2 decimal point
+      const multiplier = Math.pow(10, 2);
+      userDetails.courses[i].progressPercentage =
+        Math.round(
+          (courseProgressCount / subSectionLength) * 100 * multiplier
+        ) / multiplier;
+    }
+  }
+
+  if (!userDetails) {
+    return res
+      .status(404)
+      .json(
+        new ApiResponse(404, `Could not find user with id: ${userDetails}`, {})
+      );
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "Enrolled courses fetched successfully",
+        userDetails.courses
+      )
+    );
+});
 
 export {
   updateProfile,
   deleteAccount,
   getAllUserDetails,
   updateProfilePicture,
+  getEnrolledCourses,
 };

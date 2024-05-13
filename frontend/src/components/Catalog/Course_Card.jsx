@@ -14,7 +14,7 @@ const Course_Card = ({ course, Height }) => {
   return (
     <>
       <Link to={`/courses/${course._id}`}>
-        <div className="">
+        <div>
           <div className="rounded-lg">
             <img
               src={course?.thumbnail}
@@ -34,7 +34,9 @@ const Course_Card = ({ course, Height }) => {
                 {course?.ratingAndReviews?.length} Ratings
               </span>
             </div>
-            <p className="text-xl text-richblack-5">Rs. {course?.price}</p>
+            <p className="text-xl text-richblack-5">
+              {course.price === 0 ? "Free" : `Rs. ${course.price}`}
+            </p>
           </div>
         </div>
       </Link>

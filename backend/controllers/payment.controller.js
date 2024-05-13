@@ -7,6 +7,7 @@ import mailSender from "../utils/mailSender.js";
 import { instance } from "../utils/razorpay.js";
 import { courseEnrollmentEmail } from "../mail/templates/courseEnrollementEmail.mjs";
 import { paymentSuccessEmail } from "../mail/templates/paymentSuccessEmail.mjs";
+import crypto from "crypto";
 
 const capturePayment = asyncHandler(async (req, res) => {
   //get course and user id
@@ -24,8 +25,8 @@ const capturePayment = asyncHandler(async (req, res) => {
       return res.status(404).json(new ApiResponse(404, "Course not found", {}));
     }
     // Check if the user is already enrolled in the course
-    const uid = new mongoose.Types.ObjectId(userId);
-    if (course.studentsEnrolled.includes(uid)) {
+    // const uid = new mongoose.Types.ObjectId(userId);
+    if (course.studentsEnrolled.includes(userId)) {
       return res
         .status(400)
         .json(new ApiResponse(400, "Student already enrolled", {}));
@@ -40,7 +41,6 @@ const capturePayment = asyncHandler(async (req, res) => {
   };
 
   const response = await instance.orders.create(options);
-  console.log(response);
   if (!response) {
     return res
       .status(500)
@@ -48,7 +48,7 @@ const capturePayment = asyncHandler(async (req, res) => {
   }
   return res
     .status(200)
-    .json(new ApiResponse(200, "Successfully initiated the order"));
+    .json(new ApiResponse(200, "Successfully initiated the order", response));
 });
 
 const verifyPayment = asyncHandler(async (req, res) => {
@@ -98,7 +98,6 @@ const enrollStudents = asyncHandler(async (courses, userId, res) => {
     if (!enrolledCourse) {
       return res.status(404).json(new ApiResponse(404, "No course found", {}));
     }
-    console.log("Updated course: ", enrolledCourse);
 
     const courseProgress = await CourseProgress.create({
       courseId: courseId,
@@ -113,9 +112,8 @@ const enrollStudents = asyncHandler(async (courses, userId, res) => {
       },
       { new: true }
     );
-    console.log("Enrolled student: ", enrolledStudent);
 
-    const mailResponse = await mailSender(
+    mailSender(
       enrolledStudent.email,
       `Successfully Enrolled into ${enrolledCourse.courseName}`,
       courseEnrollmentEmail(
@@ -123,7 +121,6 @@ const enrollStudents = asyncHandler(async (courses, userId, res) => {
         `${enrolledStudent.firstName} ${enrolledStudent.lastName}`
       )
     );
-    console.log("Email sent successfully: ", mailResponse.response);
   }
 });
 
@@ -149,7 +146,6 @@ const sendPaymentSuccessEmail = asyncHandler(async (req, res) => {
       paymentId
     )
   );
-  
 });
 
 export { capturePayment, verifyPayment, sendPaymentSuccessEmail };

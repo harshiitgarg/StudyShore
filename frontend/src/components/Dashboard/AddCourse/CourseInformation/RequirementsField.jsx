@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const RequirementsField = ({
@@ -31,12 +31,13 @@ const RequirementsField = ({
     }
   };
 
+  console.log(requirementsList);
+
   const handleRemoveRequirement = (index) => {
     const updatedRequirements = [...requirementsList];
     updatedRequirements.splice(index, 1);
     setRequirementsList(updatedRequirements);
   };
-
 
   return (
     <div className="flex flex-col space-y-2">

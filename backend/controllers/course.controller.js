@@ -16,7 +16,8 @@ const createCourse = asyncHandler(async (req, res) => {
     price,
     whatYouWillLearn,
     category,
-    tag,
+    tags,
+    instructions,
   } = req.body;
   if (
     !courseName ||
@@ -24,7 +25,8 @@ const createCourse = asyncHandler(async (req, res) => {
     !price ||
     !whatYouWillLearn ||
     !category ||
-    !tag
+    !tags ||
+    !instructions
   ) {
     return res
       .status(400)
@@ -43,7 +45,8 @@ const createCourse = asyncHandler(async (req, res) => {
     price,
     whatYouWillLearn,
     category,
-    tag,
+    tags,
+    instructions,
     thumbnail: thumbnail.secure_url,
     instructor: req.user._id,
   });
@@ -168,6 +171,9 @@ const showAllCourses = asyncHandler(async (req, res) => {
 
 const getAllCoursedetails = asyncHandler(async (req, res) => {
   const { courseId } = req.body;
+  if (!courseId) {
+    return res.status(400).json(new ApiResponse(400, "Invalid id", {}));
+  }
   const courseDetails = await Course.findById(courseId)
     .populate({
       path: "instructor",
