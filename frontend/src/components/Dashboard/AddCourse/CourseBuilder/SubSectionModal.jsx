@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RxCross2 } from "react-icons/rx";
 import Upload from "../Upload";
@@ -44,6 +44,15 @@ const SubSectionModal = ({
     }
     return false;
   };
+
+  useEffect(() => {
+    if (view || edit) {
+      // console.log("modalData", modalData)
+      setValue("lectureTitle", modalData.title);
+      setValue("lectureDesc", modalData.description);
+      setValue("lectureVideo", modalData.videoUrl);
+    }
+  }, []);
 
   const handleEditSubSection = async () => {
     const currentValues = getValues();

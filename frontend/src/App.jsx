@@ -23,6 +23,8 @@ import MyCourses from "./components/Dashboard/MyCourses.jsx";
 import EditCourse from "./components/Dashboard/EditCourse/index.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
+import ViewCourse from "./pages/ViewCourse.jsx";
+import VideoDetails from "./components/ViewCourse/VideoDetails.jsx";
 
 function App() {
   const { user } = useSelector((store) => store.profile);
@@ -88,6 +90,7 @@ function App() {
               </PrivateRoute>
             }
           />
+
           <Route
             path="/dashboard/settings"
             element={
@@ -119,6 +122,19 @@ function App() {
         </Route>
         <Route path="/catalog/:catalogName" element={<Catalog />} />
         <Route path="/courses/:courseId" element={<CourseDetails />} />
+
+        <Route
+          element={
+            <PrivateRoute>
+              <ViewCourse />
+            </PrivateRoute>
+          }
+        >
+          <Route
+            path="/view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+            element={<VideoDetails />}
+          />
+        </Route>
       </Routes>
     </div>
   );

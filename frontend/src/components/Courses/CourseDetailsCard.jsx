@@ -77,7 +77,7 @@ const CourseDetailsCard = ({
             {(!user || !course?.studentsEnrolled.includes(user?._id)) && (
               <button onClick={handleAddToCart} className="blackButton">
                 {cart &&
-                (JSON.parse(localStorage.getItem("cart")).some(
+                (JSON.parse(localStorage.getItem("cart"))?.some(
                   (item) => item._id === course._id
                 ) ||
                   cart?.includes(course)) ? (

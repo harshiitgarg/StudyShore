@@ -8,3 +8,5 @@ export const COURSE_STATUS = {
   DRAFT: "Draft",
   PUBLISHED: "Published",
 };
+
+export const BASE_URL = "http://localhost:8000/api/v1";

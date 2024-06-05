@@ -57,9 +57,8 @@ export const buyCourse = async (
     }
     console.log("PRINTING orderResponse", orderResponse);
 
-    console.log(import.meta.env.VITE_APP_KEY_ID);
     const options = {
-      key: "rzp_test_FlrECCoOk0zSLH",
+      key: import.meta.env.VITE_APP_KEY_ID,
       currency: orderResponse.data.data.currency,
       amount: `${orderResponse.data.data.amount}`,
       order_id: orderResponse.data.data.id,

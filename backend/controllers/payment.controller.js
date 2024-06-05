@@ -83,7 +83,7 @@ const verifyPayment = asyncHandler(async (req, res) => {
   return res.status(500).json(new ApiResponse(500, "Payment Failed", {}));
 });
 
-const enrollStudents = asyncHandler(async (courses, userId, res) => {
+const enrollStudents = async (courses, userId, res) => {
   if (!courses || !userId) {
     return res
       .status(400)
@@ -122,7 +122,7 @@ const enrollStudents = asyncHandler(async (courses, userId, res) => {
       )
     );
   }
-});
+};
 
 const sendPaymentSuccessEmail = asyncHandler(async (req, res) => {
   const { orderId, paymentId, amount } = req.body;

@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { isInstructor, verifyJWT } from "../middlewares/auth.middleware.js";
+import {
+  isInstructor,
+  isStudent,
+  verifyJWT,
+} from "../middlewares/auth.middleware.js";
 import {
   createCourse,
   deleteCourse,
@@ -10,6 +14,7 @@ import {
   showAllCourses,
 } from "../controllers/course.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import { updateCourseProgress } from "../controllers/courseProgress.controller.js";
 
 const router = Router();
 
@@ -25,8 +30,9 @@ router
   .route("/getInstructorCourses")
   .get(verifyJWT, isInstructor, getInstructorCourses);
 router.route("/deleteCourse").delete(verifyJWT, isInstructor, deleteCourse);
+router.route("/getFullCourseDetails").post(verifyJWT, getFullCourseDetails);
 router
-  .route("/getFullCourseDetails")
-  .get(verifyJWT, isInstructor, getFullCourseDetails);
+  .route("/updateCourseProgress")
+  .post(verifyJWT, isStudent, updateCourseProgress);
 
 export default router;

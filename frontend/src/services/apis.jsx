@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000/api/v1";
+import { BASE_URL } from "../utils/constants";
 
 export const categories = {
   CATEGORIES_API: BASE_URL + "/category/showAllCategories",
@@ -31,6 +31,7 @@ export const courseEndpoints = {
   GET_INSTRUCTOR_COURSES_API: BASE_URL + "/course/getInstructorCourses",
   GET_FULL_COURSE_DETAILS_AUTHENTICATED:
     BASE_URL + "/course/getFullCourseDetails",
+  LECTURE_COMPLETION_API: BASE_URL + "/course/updateCourseProgress",
 };
 
 export const sectionEndpoints = {

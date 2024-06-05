@@ -235,8 +235,9 @@ const getInstructorCourses = asyncHandler(async (req, res) => {
 
 const getFullCourseDetails = asyncHandler(async (req, res) => {
   const { courseId } = req.body;
-  const userId = req.user.id;
-  const courseDetails = await Course.findOne(courseId)
+  console.log(req.body);
+  const userId = req.user._id;
+  const courseDetails = await Course.findOne({ _id: courseId })
     .populate({
       path: "instructor",
       populate: {
@@ -270,7 +271,7 @@ const getFullCourseDetails = asyncHandler(async (req, res) => {
   let totalDurationInSeconds = 0;
   courseDetails.courseContent.forEach((content) => {
     content.subSection.forEach((subSection) => {
-      const timeDurationInSeconds = parseInt(subSection.timeDuration);
+      const timeDurationInSeconds = parseInt(subSection.duration);
       totalDurationInSeconds += timeDurationInSeconds;
     });
   });
@@ -280,6 +281,9 @@ const getFullCourseDetails = asyncHandler(async (req, res) => {
     new ApiResponse(200, "Course details fetched successfully", {
       courseDetails,
       totalDuration,
+      completedVideos: courseProgressCount?.completedVideos
+        ? courseProgressCount?.completedVideos
+        : [],
     })
   );
 });

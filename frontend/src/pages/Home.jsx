@@ -10,7 +10,6 @@ import LearningLanguageSection from "../components/core/HomePage/LearningLanguag
 import Instructor from "../components/core/HomePage/Instructor";
 import ExploreMore from "../components/core/HomePage/ExploreMore";
 import Footer from "../components/common/Footer";
-import toast from "react-hot-toast";
 
 const Home = () => {
   return (
